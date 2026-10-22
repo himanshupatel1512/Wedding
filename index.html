@@ -488,7 +488,7 @@
         <p class="text-ink mt-2">A week of garba, mehndi, haldi and sacred rituals in Anand, Gujarat.</p>
         <div class="mt-6 mx-auto max-w-xl border border-gold/50 bg-ivory px-5 py-4 text-left text-base text-navy">
           <p class="eyebrow !text-[.62rem]">Travelling from abroad</p>
-          <p class="mt-1">Fly into <strong>Vadodara (BDQ)</strong>, about an hour's drive from Anand, or <strong>Ahmedabad (AMD)</strong>, about 1½–2 hours away. The map buttons show each venue's exact location; Google Maps can only give driving directions once you are in India.</p>
+          <p class="mt-1">Fly into <strong>Vadodara (BDQ)</strong>, about an hour's drive from Anand, or <strong>Ahmedabad (AMD)</strong>, about 1½–2 hours away. Driving directions from the buttons below work once you are in India.</p>
         </div>
       </div>
       <div id="event-list" class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mt-8"></div>
@@ -532,18 +532,18 @@ const CONFIG = {
   family: 'The Patel Family', hashtag: '#HimanshuWedsGriva',
   songUrl: '',   // optional: a song file URL (e.g. 'song.mp3'). Empty = the song embedded at the end of this file
   weddingAt: '2027-01-24T00:00:00+05:30',   // countdown target (IST). Add the muhurat time here, e.g. T10:30:00
-  // map = exact venue pin (latitude,longitude). link = optional Google Maps share link (maps.app.goo.gl/...) that overrides it
+  // map = venue name Google Maps searches for. link = optional Google Maps share link (maps.app.goo.gl/...) that overrides it
   events: [
     { name: 'Garba', deva: 'ગરબા', date: 'Wednesday, 20 January 2027', place: 'Prayosha Park, Gana, Gujarat 388345',
-      map: '22.507427,72.916129', link: '', note: 'An evening of dandiya, dhol and dancing in circles.' },
+      map: 'Prayosha Park, Gana, Gujarat 388345', link: '', note: 'An evening of dandiya, dhol and dancing in circles.' },
     { name: 'Mehndi', deva: 'મહેંદી', date: 'Thursday, 21 January 2027', place: 'Retro Bistro, Anand–Vidyanagar Road, Anand, Gujarat',
-      map: '22.551937,72.942687', link: '', note: 'Henna, music and blessings for the couple.' },
+      map: 'Retro Bistro, Anand Vidyanagar Road, Anand, Gujarat', link: '', note: 'Henna, music and blessings for the couple.' },
     { name: 'Haldi', deva: 'પીઠી', date: 'Friday, 22 January 2027', place: 'Prayosha Park, Gana, Gujarat 388345',
-      map: '22.507427,72.916129', link: '', note: 'Turmeric, marigolds and laughter with the family.' },
+      map: 'Prayosha Park, Gana, Gujarat 388345', link: '', note: 'Turmeric, marigolds and laughter with the family.' },
     { name: 'Vargodo', deva: 'વરઘોડો', date: 'Friday, 22 January 2027', place: 'Beginning from our home',
       map: '', note: 'The procession sets out with music and dancing.' },
     { name: 'Wedding · Pheras', deva: 'લગ્ન', date: 'Sunday, 24 January 2027', place: 'Bhagwati Greens, Anand, Gujarat',
-      map: '22.578688,72.938688', link: '', note: 'Seven rounds around the sacred fire.' },
+      map: 'Bhagwati Greens, Anand, Gujarat', link: '', note: 'Seven rounds around the sacred fire.' },
     { name: 'Navchandi Yagna', deva: 'નવચંડી યજ્ઞ', date: 'Tuesday, 26 January 2027', place: 'At our home',
       map: '', note: 'A havan to Maa Chandi for the new couple.' }
   ]
@@ -569,7 +569,7 @@ $('#event-list').innerHTML = CONFIG.events.map(e => `
       <dt>Venue</dt><dd>${esc(e.place)}</dd>
     </dl>
     ${e.map ? `<a class="maplink self-start mt-auto px-4 py-2.5" target="_blank" rel="noopener"
-       href="${esc(e.link || 'https://www.google.com/maps/search/?api=1&query=' + e.map)}">Open in Google Maps ↗</a>`
+       href="${esc(e.link || 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(e.map))}">Get directions ↗</a>`
       : `<span class="mt-auto eyebrow !text-[.62rem]">Family residence</span>`}
   </article>`).join('');
 
