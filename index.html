@@ -297,6 +297,25 @@
     .film-bg { background-position: 50% 55%; }
   }
 
+
+  /* Event props: a faint line drawing of each ritual behind its card */
+  .event { overflow: hidden; }
+  .event > :not(.ev-prop) { position: relative; z-index: 1; }
+  .ev-prop { position: absolute; right: -10px; bottom: -10px; width: 158px; height: 158px; z-index: 0; pointer-events: none; opacity: .32;
+    fill: none; stroke: var(--gold); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform .6s ease, opacity .6s ease; }
+  .ev-prop .pf-fill { fill: var(--ivory); }
+  .ev-prop .pf-solid { fill: var(--gold); stroke: none; }
+  .ev-prop .pf-dark { fill: var(--maroon); stroke: none; }
+  .ev-prop .pf-flame { fill: #E8932A; stroke: var(--maroon); stroke-width: 1.4; }
+  .ev-prop .pf-haldi { fill: #F2B33D; }
+  .ev-prop .pf-marigold circle { fill: #F2A83A; stroke: #C9752A; stroke-width: .8; }
+  .ev-prop .pf-leaf { fill: #9DB36B; stroke: #5E7A3A; stroke-width: 1.2; }
+  .ev-prop .pf-coconut { fill: #C9A27A; stroke: #8A6A45; }
+  .ev-prop .pf-flower path { fill: var(--maroon); stroke: none; }
+  .ev-prop .pf-swastik { stroke: var(--maroon); }
+  @media (hover: hover) { .event:hover .ev-prop { transform: rotate(-6deg) scale(1.06); opacity: .45; } }
+  @media (max-width: 400px) { .ev-prop { width: 136px; height: 136px; } }
+
   /* Music toggle */
   .music-btn { position: fixed; z-index: 40; right: calc(16px + env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px));
     display: flex; align-items: center; gap: 10px; padding: 10px 16px 10px 14px; border-radius: 999px; cursor: pointer;
@@ -359,6 +378,56 @@
       <circle cx="14" cy="14" r="3" fill="currentColor"/>
       <circle cx="60" cy="6" r="1.6" fill="currentColor"/>
       <circle cx="6" cy="60" r="1.6" fill="currentColor"/>
+    </symbol>
+
+    <symbol id="prop-garba" viewBox="0 0 120 120">
+      <path d="M18 18 L100 112 M102 18 L20 112"/><path d="M24 25 L30 31 M96 25 L90 31 M27 103 L33 97 M93 103 L87 97" stroke-width="4"/>
+      <path class="pf-fill" d="M38 62 C26 76 30 102 60 106 C90 102 94 76 82 62 Z"/>
+      <path class="pf-fill" d="M46 62 L49 52 H71 L74 62 Z"/><ellipse class="pf-fill" cx="60" cy="52" rx="13" ry="3"/>
+      <circle cx="48" cy="72" r="1.8" class="pf-solid"/><circle cx="60" cy="70" r="1.8" class="pf-solid"/><circle cx="72" cy="72" r="1.8" class="pf-solid"/><circle cx="42" cy="84" r="1.8" class="pf-solid"/><circle cx="54" cy="82" r="1.8" class="pf-solid"/><circle cx="66" cy="82" r="1.8" class="pf-solid"/><circle cx="78" cy="84" r="1.8" class="pf-solid"/><circle cx="48" cy="94" r="1.8" class="pf-solid"/><circle cx="60" cy="93" r="1.8" class="pf-solid"/><circle cx="72" cy="94" r="1.8" class="pf-solid"/>
+      <path class="pf-flame" d="M60 47 C54 41 57 33 60 27 C63 33 66 41 60 47Z"/>
+    </symbol>
+    <symbol id="prop-mehndi" viewBox="0 0 120 120">
+      <path class="pf-fill" d="M34 100 L46 106 L94 34 C97 28 90 22 85 26 Z"/>
+      <path d="M52 80 L64 87 M62 66 L74 73 M71 52 L83 59" stroke-width="1.4"/>
+      <path d="M36 104 C24 100 18 90 24 82 C30 74 42 78 40 86 C38 92 30 90 31 85"/>
+      <g class="pf-flower"><path transform="rotate(0 86 88)" d="M86 88 C82 80 83 74 86 70 C89 74 90 80 86 88Z"/><path transform="rotate(45 86 88)" d="M86 88 C82 80 83 74 86 70 C89 74 90 80 86 88Z"/><path transform="rotate(90 86 88)" d="M86 88 C82 80 83 74 86 70 C89 74 90 80 86 88Z"/><path transform="rotate(135 86 88)" d="M86 88 C82 80 83 74 86 70 C89 74 90 80 86 88Z"/><path transform="rotate(180 86 88)" d="M86 88 C82 80 83 74 86 70 C89 74 90 80 86 88Z"/><path transform="rotate(225 86 88)" d="M86 88 C82 80 83 74 86 70 C89 74 90 80 86 88Z"/><path transform="rotate(270 86 88)" d="M86 88 C82 80 83 74 86 70 C89 74 90 80 86 88Z"/><path transform="rotate(315 86 88)" d="M86 88 C82 80 83 74 86 70 C89 74 90 80 86 88Z"/><circle cx="86" cy="88" r="3" class="pf-dark"/></g>
+      <circle cx="86" cy="88" r="22" stroke-dasharray="1.5 3.5" stroke-width="1"/>
+    </symbol>
+    <symbol id="prop-haldi" viewBox="0 0 120 120">
+      <path class="pf-fill" d="M16 72 H104 C102 94 84 106 60 106 C36 106 18 94 16 72Z"/>
+      <path class="pf-haldi" d="M24 72 C36 58 84 58 96 72 Z"/>
+      <path d="M30 86 C46 92 74 92 90 86" stroke-width="1.2" stroke-dasharray="2 3"/>
+      <path d="M50 106 L46 112 H74 L70 106"/>
+      <g class="pf-marigold"><circle cx="45.9" cy="38.0" r="4.6"/><circle cx="44.9" cy="42.0" r="4.6"/><circle cx="42.0" cy="44.9" r="4.6"/><circle cx="38.0" cy="45.9" r="4.6"/><circle cx="34.0" cy="44.9" r="4.6"/><circle cx="31.1" cy="42.0" r="4.6"/><circle cx="30.1" cy="38.0" r="4.6"/><circle cx="31.1" cy="34.0" r="4.6"/><circle cx="34.0" cy="31.1" r="4.6"/><circle cx="38.0" cy="30.1" r="4.6"/><circle cx="42.0" cy="31.1" r="4.6"/><circle cx="44.9" cy="34.0" r="4.6"/><circle cx="38" cy="38" r="4.2" class="pf-dark"/></g><g class="pf-marigold"><circle cx="74.5" cy="28.0" r="3.8"/><circle cx="73.6" cy="31.2" r="3.8"/><circle cx="71.2" cy="33.6" r="3.8"/><circle cx="68.0" cy="34.5" r="3.8"/><circle cx="64.8" cy="33.6" r="3.8"/><circle cx="62.4" cy="31.2" r="3.8"/><circle cx="61.5" cy="28.0" r="3.8"/><circle cx="62.4" cy="24.8" r="3.8"/><circle cx="64.8" cy="22.4" r="3.8"/><circle cx="68.0" cy="21.5" r="3.8"/><circle cx="71.2" cy="22.4" r="3.8"/><circle cx="73.6" cy="24.8" r="3.8"/><circle cx="68" cy="28" r="3.4" class="pf-dark"/></g><g class="pf-marigold"><circle cx="95.8" cy="46.0" r="3.4"/><circle cx="95.0" cy="48.9" r="3.4"/><circle cx="92.9" cy="51.0" r="3.4"/><circle cx="90.0" cy="51.8" r="3.4"/><circle cx="87.1" cy="51.0" r="3.4"/><circle cx="85.0" cy="48.9" r="3.4"/><circle cx="84.2" cy="46.0" r="3.4"/><circle cx="85.0" cy="43.1" r="3.4"/><circle cx="87.1" cy="41.0" r="3.4"/><circle cx="90.0" cy="40.2" r="3.4"/><circle cx="92.9" cy="41.0" r="3.4"/><circle cx="95.0" cy="43.1" r="3.4"/><circle cx="90" cy="46" r="3.0" class="pf-dark"/></g>
+      <path class="pf-leaf" d="M52 48 C56 40 64 40 70 44 C64 48 58 50 52 48Z"/>
+    </symbol>
+    <symbol id="prop-vargodo" viewBox="0 0 120 120">
+      <path class="pf-fill" d="M28 40 H92 V88 H28 Z" stroke="none"/>
+      <ellipse class="pf-fill" cx="28" cy="64" rx="10" ry="24"/><ellipse cx="92" cy="64" rx="10" ry="24"/>
+      <path d="M28 40 H92 M28 88 H92"/>
+      <path d="M32 41 L42 87 L52 41 L62 87 L72 41 L82 87 L90 42" stroke-width="1.4"/>
+      <path d="M28 52 C40 50 80 50 92 52 M28 76 C40 78 80 78 92 76" stroke-width="1" stroke-dasharray="2 3"/>
+      <path d="M70 34 C78 22 92 12 106 8" stroke-width="3"/><circle cx="68" cy="36" r="3" class="pf-dark"/>
+      <path d="M22 92 C40 108 80 108 98 92" stroke-width="1.2"/>
+    </symbol>
+    <symbol id="prop-phera" viewBox="0 0 120 120">
+      <path d="M16 44 V110 M104 44 V110 M12 110 H22 M98 110 H108"/>
+      <path class="pf-fill" d="M8 44 H112 L106 38 C88 30 72 20 60 10 C48 20 32 30 14 38 Z"/>
+      <path class="pf-flame" d="M60 10 C57 6 58 3 60 1 C62 3 63 6 60 10Z"/>
+      <path d="M20 44 C26 52 34 52 40 44 C46 52 54 52 60 44 C66 52 74 52 80 44 C86 52 94 52 100 44" stroke-width="1.2"/>
+      <rect class="pf-fill" x="34" y="96" width="52" height="12"/><rect class="pf-fill" x="40" y="88" width="40" height="8"/>
+      <path class="pf-flame" d="M60 88 C46 78 52 66 60 54 C62 62 72 66 67 76 C74 73 74 82 70 88Z"/>
+      <path class="pf-flame" d="M48 88 C42 82 46 76 49 72 C50 78 54 82 52 88Z"/><path class="pf-flame" d="M74 88 C72 82 75 78 78 74 C80 80 82 84 78 88Z"/>
+    </symbol>
+    <symbol id="prop-yagna" viewBox="0 0 120 120">
+      <path transform="rotate(-62 60 58)" d="M60 58 C54 44 56 30 60 22 C64 30 66 44 60 58Z" class="pf-leaf"/><path transform="rotate(-38 60 58)" d="M60 58 C54 44 56 30 60 22 C64 30 66 44 60 58Z" class="pf-leaf"/><path transform="rotate(-14 60 58)" d="M60 58 C54 44 56 30 60 22 C64 30 66 44 60 58Z" class="pf-leaf"/><path transform="rotate(14 60 58)" d="M60 58 C54 44 56 30 60 22 C64 30 66 44 60 58Z" class="pf-leaf"/><path transform="rotate(38 60 58)" d="M60 58 C54 44 56 30 60 22 C64 30 66 44 60 58Z" class="pf-leaf"/><path transform="rotate(62 60 58)" d="M60 58 C54 44 56 30 60 22 C64 30 66 44 60 58Z" class="pf-leaf"/>
+      <ellipse class="pf-coconut" cx="60" cy="50" rx="11" ry="13"/><path d="M56 38 C58 34 62 34 64 38" stroke-width="1.4"/>
+      <path class="pf-fill" d="M46 70 L50 60 H70 L74 70 Z"/>
+      <path class="pf-fill" d="M40 70 C26 84 32 106 60 108 C88 106 94 84 80 70 Z"/>
+      <path d="M36 80 H84" stroke-width="1.2"/>
+      <path class="pf-swastik" d="M60 82 V98 M52 90 H68 M60 82 H66 M68 90 V96 M60 98 H54 M52 90 V84" stroke-width="2"/>
+      <circle cx="56" cy="86" r="1" class="pf-dark"/><circle cx="64" cy="86" r="1" class="pf-dark"/><circle cx="56" cy="94" r="1" class="pf-dark"/><circle cx="64" cy="94" r="1" class="pf-dark"/>
     </symbol>
     <symbol id="lotus" viewBox="0 0 64 32">
       <g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round">
@@ -570,17 +639,17 @@ const CONFIG = {
   weddingAt: '2027-01-24T00:00:00+05:30',   // countdown target (IST). Add the muhurat time here, e.g. T10:30:00
   // map = venue name Google Maps searches for. link = optional Google Maps share link (maps.app.goo.gl/...) that overrides it
   events: [
-    { name: 'Garba', deva: 'ગરબા', date: 'Wednesday, 20 January 2027', place: 'Prayosha Park, Gana, Gujarat 388345',
+    { name: 'Garba', prop: 'garba', deva: 'ગરબા', date: 'Wednesday, 20 January 2027', place: 'Prayosha Park, Gana, Gujarat 388345',
       map: 'Prayosha Park, Gana, Gujarat 388345', link: '', note: 'An evening of dandiya, dhol and dancing in circles.' },
-    { name: 'Mehndi', deva: 'મહેંદી', date: 'Thursday, 21 January 2027', place: 'Retro Bistro, Anand–Vidyanagar Road, Anand, Gujarat',
+    { name: 'Mehndi', prop: 'mehndi', deva: 'મહેંદી', date: 'Thursday, 21 January 2027', place: 'Retro Bistro, Anand–Vidyanagar Road, Anand, Gujarat',
       map: 'Retro Bistro, Anand Vidyanagar Road, Anand, Gujarat', link: '', note: 'Henna, music and blessings for the couple.' },
-    { name: 'Haldi', deva: 'પીઠી', date: 'Friday, 22 January 2027', place: 'Prayosha Park, Gana, Gujarat 388345',
+    { name: 'Haldi', prop: 'haldi', deva: 'પીઠી', date: 'Friday, 22 January 2027', place: 'Prayosha Park, Gana, Gujarat 388345',
       map: 'Prayosha Park, Gana, Gujarat 388345', link: '', note: 'Turmeric, marigolds and laughter with the family.' },
-    { name: 'Vargodo', deva: 'વરઘોડો', date: 'Friday, 22 January 2027', place: 'Beginning from our home',
+    { name: 'Vargodo', prop: 'vargodo', deva: 'વરઘોડો', date: 'Friday, 22 January 2027', place: 'Beginning from our home',
       map: '', note: 'The procession sets out with music and dancing.' },
-    { name: 'Wedding · Pheras', deva: 'લગ્ન', date: 'Sunday, 24 January 2027', place: 'Bhagwati Greens, Anand, Gujarat',
+    { name: 'Wedding · Pheras', prop: 'phera', deva: 'લગ્ન', date: 'Sunday, 24 January 2027', place: 'Bhagwati Greens, Anand, Gujarat',
       map: 'Bhagwati Greens, Anand, Gujarat', link: '', note: 'Seven rounds around the sacred fire.' },
-    { name: 'Navchandi Yagna', deva: 'નવચંડી યજ્ઞ', date: 'Tuesday, 26 January 2027', place: 'At our home',
+    { name: 'Navchandi Yagna', prop: 'yagna', deva: 'નવચંડી યજ્ઞ', date: 'Tuesday, 26 January 2027', place: 'At our home',
       map: '', note: 'A havan to Maa Chandi for the new couple.' }
   ]
 };
@@ -605,6 +674,7 @@ document.querySelectorAll('[data-c]').forEach(el => { const v = CONFIG[el.datase
 const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 $('#event-list').innerHTML = CONFIG.events.map(e => `
   <article class="event relative p-6 sm:p-7 min-w-0 flex flex-col">
+    ${e.prop ? `<svg class="ev-prop" aria-hidden="true"><use href="#prop-${e.prop}"/></svg>` : ''}
     <div class="flex items-baseline justify-between gap-3 flex-wrap">
       <h3 class="font-display text-xl text-maroon">${esc(e.name)}</h3>
       <span class="font-guj text-gold text-lg">${esc(e.deva)}</span>
