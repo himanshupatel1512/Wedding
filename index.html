@@ -298,23 +298,49 @@
   }
 
 
-  /* Event props: a faint line drawing of each ritual behind its card */
+  /* Event props: a colourful drawing of each ritual behind its card */
   .event { overflow: hidden; }
   .event > :not(.ev-prop) { position: relative; z-index: 1; }
-  .ev-prop { position: absolute; right: -10px; bottom: -10px; width: 158px; height: 158px; z-index: 0; pointer-events: none; opacity: .32;
-    fill: none; stroke: var(--gold); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform .6s ease, opacity .6s ease; }
-  .ev-prop .pf-fill { fill: var(--ivory); }
-  .ev-prop .pf-solid { fill: var(--gold); stroke: none; }
-  .ev-prop .pf-dark { fill: var(--maroon); stroke: none; }
-  .ev-prop .pf-flame { fill: #E8932A; stroke: var(--maroon); stroke-width: 1.4; }
-  .ev-prop .pf-haldi { fill: #F2B33D; }
-  .ev-prop .pf-marigold circle { fill: #F2A83A; stroke: #C9752A; stroke-width: .8; }
-  .ev-prop .pf-leaf { fill: #9DB36B; stroke: #5E7A3A; stroke-width: 1.2; }
-  .ev-prop .pf-coconut { fill: #C9A27A; stroke: #8A6A45; }
-  .ev-prop .pf-flower path { fill: var(--maroon); stroke: none; }
-  .ev-prop .pf-swastik { stroke: var(--maroon); }
-  @media (hover: hover) { .event:hover .ev-prop { transform: rotate(-6deg) scale(1.06); opacity: .45; } }
-  @media (max-width: 400px) { .ev-prop { width: 136px; height: 136px; } }
+  .ev-prop { position: absolute; right: -8px; bottom: -8px; width: 160px; height: 160px; z-index: 0; pointer-events: none; opacity: .58;
+    fill: none; stroke: #A8772E; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transform-origin: 70% 80%;
+    transition: transform .7s cubic-bezier(.2,.8,.2,1), opacity .7s ease, filter .7s ease; }
+  .event.ev-live .ev-prop { transform: rotate(-7deg) scale(1.1); opacity: .95; filter: drop-shadow(0 6px 10px rgba(122,31,43,.25)); animation: sway 3.2s ease-in-out .7s infinite; }
+  @media (hover: hover) { .event:hover .ev-prop { transform: rotate(-7deg) scale(1.1); opacity: .95; filter: drop-shadow(0 6px 10px rgba(122,31,43,.25)); } }
+  @keyframes sway { 0%, 100% { transform: rotate(-7deg) scale(1.1); } 50% { transform: rotate(-2deg) scale(1.12); } }
+  @media (max-width: 400px) { .ev-prop { width: 140px; height: 140px; } }
+  [id^="prop-"] .pf-fill { fill: #FBF6EC; }
+  [id^="prop-"] .pf-solid { fill: #FFD66B; stroke: none; }
+  [id^="prop-"] .pf-dark { fill: #7A1F2B; stroke: none; }
+  [id^="prop-"] .pf-flame { fill: #F28C28; stroke: #C0391B; stroke-width: 1.4; }
+  [id^="prop-"] .pf-haldi { fill: #F4B400; stroke: #C98A00; }
+  [id^="prop-"] .pf-marigold circle { fill: #F7941D; stroke: #D2691E; stroke-width: .8; }
+  [id^="prop-"] .pf-marigold circle.pf-dark { fill: #B8461B; }
+  [id^="prop-"] .pf-leaf { fill: #7FB04B; stroke: #4E7D2B; stroke-width: 1.2; }
+  [id^="prop-"] .pf-coconut { fill: #A97142; stroke: #6E4422; }
+  [id^="prop-"] .pf-flower path { fill: #9C3A1E; stroke: none; }
+  [id^="prop-"] .pf-swastik { stroke: #C0262D; }
+  #prop-garba > path:nth-child(1) { stroke: #C0262D; stroke-width: 3; }
+  #prop-garba > path:nth-child(2) { stroke: #2E8B57; }
+  #prop-garba .pf-fill { fill: #D9733F; stroke: #8C3B1C; }
+  #prop-mehndi .pf-fill { fill: #7A9A3A; stroke: #4E6B22; }
+  #prop-mehndi > path:nth-child(2) { stroke: #E6C36A; stroke-width: 2; }
+  #prop-mehndi > path:nth-child(3) { stroke: #8E3B1F; stroke-width: 2.6; }
+  #prop-mehndi > circle { stroke: #9C3A1E; }
+  #prop-haldi .pf-fill { fill: #D4A64A; stroke: #8C6420; }
+  #prop-haldi > path:nth-child(3) { stroke: #FFF1C2; }
+  #prop-vargodo > path:nth-child(1) { fill: #B3202A; }
+  #prop-vargodo .pf-fill, #prop-vargodo > ellipse { fill: #F3E0B5; stroke: #8C3B1C; }
+  #prop-vargodo > path:nth-child(4) { stroke: #8C3B1C; }
+  #prop-vargodo > path:nth-child(5) { stroke: #F2C14E; stroke-width: 2; }
+  #prop-vargodo > path:nth-child(6) { stroke: #F7E3A8; }
+  #prop-vargodo > path:nth-child(7) { stroke: #6E4422; }
+  #prop-vargodo > path:nth-child(9) { stroke: #2E8B57; stroke-width: 2; }
+  #prop-phera path.pf-fill { fill: #9E1B32; stroke: #D9B86A; }
+  #prop-phera rect.pf-fill { fill: #C8643B; stroke: #7A2E12; }
+  #prop-phera > path:nth-child(1) { stroke: #B48A3C; stroke-width: 3; }
+  #prop-phera > path:nth-child(4) { stroke: #F7941D; stroke-width: 3; }
+  #prop-yagna .pf-fill { fill: #C77B3A; stroke: #7A4316; }
+  #prop-yagna > path:nth-last-child(6) { stroke: #F2C14E; stroke-width: 2.4; }
 
   /* Music toggle */
   .music-btn { position: fixed; z-index: 40; right: calc(16px + env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px));
@@ -683,6 +709,19 @@ $('#event-list').innerHTML = CONFIG.events.map(e => `
        href="${esc(e.link || 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(e.map))}">Get directions ↗</a>`
       : `<span class="mt-auto eyebrow !text-[.62rem]">Family residence</span>`}
   </article>`).join('');
+
+/* Phones: a card's drawing comes alive when the card is in the middle of the screen, or when tapped */
+if (!matchMedia('(hover: hover)').matches) {
+  const cards = [...document.querySelectorAll('.event')];
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    const live = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('ev-live', e.isIntersecting)), { rootMargin: '-44% 0px -44% 0px' });
+    cards.forEach(c => live.observe(c));
+  }
+  cards.forEach(c => c.addEventListener('touchstart', () => {
+    cards.forEach(o => o !== c && o.classList.remove('ev-live'));
+    c.classList.add('ev-live');
+  }, { passive: true }));
+}
 
 /* Countdown */
 const target = new Date(CONFIG.weddingAt).getTime();
