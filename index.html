@@ -286,6 +286,17 @@
   }
   @media (pointer: coarse) { #grain { display: none; } }
 
+
+  /* Portrait phones: full-screen film, no letterbox bars */
+  @media (orientation: portrait) {
+    .bar { background: transparent; height: auto; }
+    .bar.top { display: none; }
+    .bar.bot { padding: 0 max(16px, env(safe-area-inset-right, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)) 0; }
+    .shot { inset: 0; padding-top: calc(24px + env(safe-area-inset-top, 0px)); padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
+    #film-skip { background: rgba(5,7,15,.45); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
+    .film-bg { background-position: 50% 55%; }
+  }
+
   /* Music toggle */
   .music-btn { position: fixed; z-index: 40; right: calc(16px + env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px));
     display: flex; align-items: center; gap: 10px; padding: 10px 16px 10px 14px; border-radius: 999px; cursor: pointer;
