@@ -73,9 +73,16 @@
   const linkFor = n => BASE + '?to=' + encodeURIComponent(n);
   let links = [];
 
+  function legacyCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.focus(); ta.select(); ta.setSelectionRange(0, text.length);
+    let ok = false; try { ok = document.execCommand('copy'); } catch (_) {}
+    ta.remove(); return ok;
+  }
   async function copy(text, done) {
-    try { await navigator.clipboard.writeText(text); done('Copied'); }
-    catch (_) { done('Select the link and copy it'); }
+    try { if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); done('Copied'); return; } } catch (_) {}
+    done(legacyCopy(text) ? 'Copied' : 'Press and hold the link to copy');
   }
   function render() {
     const people = [...new Set(names.value.split('\n').map(s => s.replace(/\s+/g, ' ').trim()).filter(Boolean))];
@@ -85,15 +92,16 @@
     $('#empty').hidden = links.length > 0;
     links.forEach(({ n, url }) => {
       const li = document.createElement('li');
-      const text = msg.value.replaceAll('{name}', n).replaceAll('{link}', url);
+      const text = msg.value.split('{name}').join(n).split('{link}').join(url);
       li.innerHTML = `<span class="name"></span><span class="url"></span>
-        <div class="row"><a class="btn wa" target="_blank" rel="noopener">Send on WhatsApp</a><button class="btn" type="button">Copy link</button><a class="btn" target="_blank" rel="noopener">Preview</a></div>`;
+        <div class="row"><a class="btn wa" target="_blank" rel="noopener">Send on WhatsApp</a><button class="btn copy" type="button">Copy link</button><button class="btn share" type="button" hidden>Share…</button><a class="btn pv" target="_blank" rel="noopener">Preview</a></div>`;
       li.querySelector('.name').textContent = n;
       li.querySelector('.url').textContent = url;
-      const [wa, , pv] = li.querySelectorAll('a, button');
-      wa.href = 'https://wa.me/?text=' + encodeURIComponent(text);
-      pv.href = url;
-      const cb = li.querySelector('button');
+      li.querySelector('a.wa').href = 'https://wa.me/?text=' + encodeURIComponent(text);
+      li.querySelector('a.pv').href = url;
+      const sh = li.querySelector('button.share');
+      if (navigator.share) { sh.hidden = false; sh.addEventListener('click', () => navigator.share({ text }).catch(() => {})); }
+      const cb = li.querySelector('button.copy');
       cb.addEventListener('click', () => copy(url, t => { cb.textContent = t; setTimeout(() => cb.textContent = 'Copy link', 1800); }));
       list.appendChild(li);
     });
