@@ -187,6 +187,7 @@
   .film-deva { font-family: var(--f-deva); font-size: clamp(1.7rem, 7vw, 3rem); line-height: 1.4; }
   .film-cap { font-family: var(--f-display); letter-spacing: .34em; text-transform: uppercase; font-size: .72rem; color: #B9AE98; }
   .film-title { font-family: var(--f-display); font-size: clamp(1.8rem, 7vw, 3.2rem); letter-spacing: .08em; }
+  .film-hosts { font-family: var(--f-display); font-size: clamp(1.25rem, 5.6vw, 2.4rem); letter-spacing: .04em; line-height: 1.25; }
   .film-names { font-family: var(--f-script); font-size: clamp(3.6rem, 16vw, 8rem); line-height: 1.05; }
   .names-shot span { display: block; opacity: 0; filter: blur(10px); transition: opacity 1.4s ease, filter 1.4s ease, transform 1.8s cubic-bezier(.2,.7,.2,1); }
   .names-shot .n1 { transform: translateX(-40px); }
@@ -521,7 +522,7 @@
   <div class="bar bot"><button id="film-skip" type="button">Skip intro ›</button></div>
   <div class="shot"><svg class="film-emblem" aria-hidden="true"><use href="#ganesha"/></svg><p class="film-deva film-gold">॥ श्री गणेशाय नमः ॥</p><p class="film-cap">Shri Ganeshaya Namah</p></div>
   <div class="shot"><p class="film-deva film-gold">॥ जय स्वामिनारायण ॥</p><p class="film-cap">With the blessings of the Almighty</p></div>
-  <div class="shot"><p class="film-cap">Sneh Nimantran</p><p class="film-title film-gold" data-c="family">The Patel Family</p><p data-noguest class="italic text-xl text-[#D8CDB6] max-w-sm">invites you to celebrate the sacred union of</p><p data-guest hidden class="italic text-xl text-[#D8CDB6] max-w-sm">warmly invites<span class="guest-name block not-italic font-display text-2xl film-gold my-2"></span>to celebrate the sacred union of</p></div>
+  <div class="shot"><p class="film-cap">Sneh Nimantran</p><p class="film-hosts film-gold"><span class="block">Mahesh Dahayabhai Patel</span><span class="block film-cap my-2">&amp;</span><span class="block">Mitesh Dahayabhai Patel</span></p><p data-noguest class="italic text-xl text-[#D8CDB6] max-w-sm">invites you to celebrate the sacred union of</p><p data-guest hidden class="italic text-xl text-[#D8CDB6] max-w-sm">warmly invites<span class="guest-name block not-italic font-display text-2xl film-gold my-2"></span>to celebrate the sacred union of</p></div>
   <div class="shot names-shot"><span class="n1 film-names film-gold" data-c="bride">Himanshu</span><span class="w film-cap">— weds —</span><span class="n2 film-names film-gold" data-c="groom">Griva</span></div>
   <div class="shot"><p class="film-cap">Shubh Vivah</p><p class="film-date film-gold">24 · 01 · 2027</p><p class="italic text-xl text-[#D8CDB6]">Bhagwati Greens · Anand</p><svg class="w-14 h-7 text-gold" aria-hidden="true"><use href="#lotus"/></svg></div>
 </div>
@@ -669,7 +670,7 @@
     </g>
   </svg>
   <p class="font-deva text-maroon text-lg mt-6">सप्तपदी · सात फेरे · सात वचन</p>
-  <p class="text-ink mt-2">With love, <span data-c="family">The Patel Family</span></p>
+  <p class="text-ink mt-2">With love,<br><span class="inline-block font-display text-navy">Mahesh Dahayabhai Patel</span> &amp; <span class="inline-block font-display text-navy">Mitesh Dahayabhai Patel</span></p>
   <p class="font-display text-gold tracking-[.2em] text-sm mt-3" data-c="hashtag">#HimanshuWedsGriva</p>
 </footer>
 
