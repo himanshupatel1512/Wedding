@@ -347,6 +347,10 @@
     box-shadow: 0 10px 24px -10px rgba(30,42,74,.6), inset 0 0 0 3px var(--maroon), inset 0 0 0 4px rgba(217,184,106,.5);
     font-family: var(--f-display); font-size: .66rem; letter-spacing: .2em; text-transform: uppercase; transition: filter .2s; }
   .music-btn:hover { filter: brightness(1.1); }
+  .music-btn.nudge:not(.on) { animation: nudgeRing 1.8s ease-out infinite; }
+  @keyframes nudgeRing { 0% { box-shadow: 0 0 0 0 rgba(217,184,106,.75), inset 0 0 0 3px var(--maroon), inset 0 0 0 4px rgba(217,184,106,.5); }
+    100% { box-shadow: 0 0 0 16px rgba(217,184,106,0), inset 0 0 0 3px var(--maroon), inset 0 0 0 4px rgba(217,184,106,.5); } }
+
   .bars { display: flex; align-items: flex-end; gap: 2px; height: 14px; }
   .bars i { width: 3px; height: 4px; background: var(--gold-light); border-radius: 1px; }
   .music-btn.on .bars i { animation: eq .9s ease-in-out infinite; }
@@ -880,17 +884,27 @@ const Music = (() => {
 
   function ui() {
     const btn = $('#music-btn');
+    if (playing) btn.classList.remove('nudge');
     btn.classList.toggle('on', playing); btn.setAttribute('aria-pressed', playing);
     btn.setAttribute('aria-label', playing ? 'Pause music' : 'Play music');
     $('#music-label').textContent = playing ? 'Music on' : 'Play music';
   }
+  // Phones only allow sound after a tap, so if a start is blocked, try again on the next touch anywhere
+  let starting = false, userPaused = false, armed = false;
+  function arm() {
+    $('#music-btn').classList.add('nudge');
+    if (armed) return; armed = true;
+    const go = () => { if (!userPaused && !playing) play(); };
+    ['pointerup', 'touchend', 'click', 'keydown'].forEach(ev => document.addEventListener(ev, go, { capture: true, passive: true }));
+  }
   function play() {
-    if (playing) return;
+    if (playing || starting) return;
     const embedded = $('#song-data'), src = CONFIG.songUrl || (embedded && embedded.textContent.trim() ? 'data:audio/mpeg;base64,' + embedded.textContent.trim() : '');
     if (src) {
       audioEl = audioEl || Object.assign(new Audio(src), { loop: true, volume: 0.8, preload: 'auto' });
       audioEl.setAttribute('playsinline', '');
-      audioEl.play().then(() => { playing = true; ui(); }).catch(() => {});
+      starting = true;
+      audioEl.play().then(() => { playing = true; starting = false; ui(); }).catch(() => { starting = false; arm(); });
       return;
     }
     if (!ctx) setup();
@@ -913,7 +927,13 @@ const Music = (() => {
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) { resumeOnShow = playing; pause(); } else if (resumeOnShow) play();
   });
-  $('#music-btn').addEventListener('click', () => playing ? pause() : play());
+  // a page brought back from the browser's memory (reopening the same link) restarts its music
+  addEventListener('pageshow', e => { if (e.persisted && !userPaused) play(); });
+  $('#music-btn').addEventListener('click', e => {
+    e.stopPropagation();
+    if (playing) { userPaused = true; pause(); } else { userPaused = false; play(); }
+  });
+  arm();
   return { play };
 })();
 $('#seal').addEventListener('click', () => Music.play());
