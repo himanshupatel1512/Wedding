@@ -70,7 +70,7 @@
   const load = k => { try { return localStorage.getItem(k); } catch (_) { return null; } };
   names.value = load('guest-names') || '';
   msg.value = load('guest-msg') || DEFAULT_MSG;
-  const linkFor = n => BASE + '?to=' + encodeURIComponent(n);
+  const linkFor = n => BASE + '?to=' + encodeURIComponent(n).replace(/%20/g, '+');
   let links = [];
 
   function legacyCopy(text) {

@@ -703,7 +703,15 @@ const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 
 /* Personal invitations: ?to=Guest Name shows the guest's name */
-const guest = (() => { try { const q = new URLSearchParams(location.search); return (q.get('to') || q.get('name') || '').replace(/\s+/g, ' ').trim().slice(0, 60); } catch (_) { return ''; } })();
+const guest = (() => {
+  try {
+    const q = new URLSearchParams(location.search);
+    let v = q.get('to') || q.get('name') || '';
+    // links copied through some apps get encoded twice (Himanshu%2520Patel); undo the extra layers
+    for (let i = 0; i < 3 && /%[0-9a-f]{2}/i.test(v); i++) { try { v = decodeURIComponent(v); } catch (_) { break; } }
+    return v.replace(/\+/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 60);
+  } catch (_) { return ''; }
+})();
 if (guest) {
   document.querySelectorAll('.guest-name').forEach(el => el.textContent = guest);
   document.querySelectorAll('[data-guest]').forEach(el => el.hidden = false);
