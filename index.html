@@ -822,6 +822,7 @@ function openEnvelope() {
   setTimeout(() => playFilm(true), 2100);
 }
 $('#seal').addEventListener('click', openEnvelope);
+setTimeout(openEnvelope, 3000);   // opens on its own after 3 seconds; music then starts on the first touch
 $('#skip').addEventListener('click', () => { opened = true; reveal(); });
 
 
