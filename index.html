@@ -515,7 +515,7 @@
     <button class="seal" id="seal" aria-label="Open the invitation"><span data-c="initials">H·G</span></button>
   </div>
   <div class="text-center"><p class="env-hint">Tap the seal to open</p>
-  <p class="italic text-[#C9C1B3] mt-1">Turn up your volume for music</p></div>
+  <p class="italic text-[#C9C1B3] mt-1">Your invitation opens with music, so turn up your volume</p></div>
   <button class="skip" id="skip">Skip to invitation</button>
 </div>
 <div id="film" hidden aria-label="Invitation film">
@@ -823,7 +823,6 @@ function openEnvelope() {
 }
 $('#seal').addEventListener('click', openEnvelope);
 $('#skip').addEventListener('click', () => { opened = true; reveal(); });
-setTimeout(openEnvelope, 6000);   // opens on its own if nobody taps
 
 
 /* Music: built-in shehnai-style tune in Raag Bhupali over tanpura and soft dholak (Web Audio), or CONFIG.songUrl */
@@ -934,6 +933,7 @@ const Music = (() => {
     if (playing) { userPaused = true; pause(); } else { userPaused = false; play(); }
   });
   arm();
+  setTimeout(play, 300);   // some browsers allow sound without a tap (e.g. a returning visitor on a computer); others wait for the first touch
   return { play };
 })();
 $('#seal').addEventListener('click', () => Music.play());
