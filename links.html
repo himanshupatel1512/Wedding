@@ -42,6 +42,9 @@
   .mehndi-toggle input { width: 22px; height: 22px; accent-color: var(--maroon); margin: 0; }
   li.has-mehndi { border-color: var(--maroon); box-shadow: inset 4px 0 0 var(--maroon); }
   .tag { font-family: var(--f-display); font-size: .6rem; letter-spacing: .16em; text-transform: uppercase; color: #fff; background: var(--maroon); padding: 3px 8px; margin-left: 8px; vertical-align: middle; }
+  .sent-note { font-size: .95rem; color: #1F7A4D; }
+  .sheet-state { font-size: .95rem; color: var(--ink); }
+  .sheet-state.on { color: #1F7A4D; }
   .empty { color: var(--ink); font-style: italic; text-align: center; padding: 20px; border: 1px dashed rgba(180,138,60,.6); }
 </style>
 </head>
@@ -58,7 +61,8 @@
     <textarea id="names" placeholder="Ramesh Patel &amp; Family&#10;Priya Shah&#10;Mehta Family"></textarea>
     <label for="message">WhatsApp message <span style="text-transform:none;letter-spacing:0;font-family:var(--f-body)">({name} and {link} are filled in)</span></label>
     <textarea id="message" style="min-height:110px"></textarea>
-    <div class="row"><button class="btn primary" id="make" type="button">Make links</button><button class="btn" id="copy-all" type="button">Copy all links</button></div>
+    <div class="row"><button class="btn primary" id="make" type="button">Make links</button><button class="btn" id="copy-all" type="button">Copy all links</button><button class="btn" id="copy-sent" type="button">Copy sent list</button></div>
+    <p class="sheet-state" id="sheet-state"></p>
     <p class="hint" id="status" role="status"></p>
   </section>
 
@@ -74,6 +78,25 @@
   const load = k => { try { return localStorage.getItem(k); } catch (_) { return null; } };
   names.value = load('guest-names') || '';
   msg.value = load('guest-msg') || DEFAULT_MSG;
+  // Google Sheet logging: paste your Apps Script web app URL here (ends in /exec). Empty = keep the log on this device only
+  const SHEET_URL = '';
+  const ALL_EVENTS = 'Garba, Haldi, Varghodo, Wedding, Navchandi Yagna';
+  const WITH_MEHNDI = 'Garba, Mehndi, Haldi, Varghodo, Wedding, Navchandi Yagna';
+  let sent = {}; try { sent = JSON.parse(load('sent-log') || '{}'); } catch (_) {}
+  const fmt = t => new Date(t).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' });
+  function record(n, url, method) {
+    const prev = sent[n] || {};
+    sent[n] = { time: Date.now(), mehndi: mehndi.has(n), method, count: (prev.count || 0) + 1 };
+    save('sent-log', JSON.stringify(sent));
+    if (SHEET_URL) {
+      const body = JSON.stringify({ name: n, events: mehndi.has(n) ? WITH_MEHNDI : ALL_EVENTS, mehndi: mehndi.has(n), method, link: url, time: new Date().toISOString() });
+      try {
+        if (!(navigator.sendBeacon && navigator.sendBeacon(SHEET_URL, new Blob([body], { type: 'text/plain;charset=utf-8' }))))
+          fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', keepalive: true, headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body }).catch(() => {});
+      } catch (_) {}
+    }
+    setTimeout(() => { const y = scrollY; render(); scrollTo(0, y); }, 400);
+  }
   const MEHNDI_LINE = 'You are also warmly invited to the Mehndi on Thursday, 21 January 2027.';
   let mehndi = new Set(); try { mehndi = new Set(JSON.parse(load('mehndi-guests') || '[]')); } catch (_) {}
   const saveMehndi = () => save('mehndi-guests', JSON.stringify([...mehndi]));
@@ -108,6 +131,7 @@
       if (mehndi.has(n)) li.classList.add('has-mehndi');
       li.innerHTML = `<span class="name"></span><span class="url"></span>
         <label class="mehndi-toggle"><input type="checkbox"> Also invite to Mehndi</label>
+        <span class="sent-note" hidden></span>
         <div class="row"><a class="btn wa" target="_blank" rel="noopener">Send on WhatsApp</a><button class="btn copy" type="button">Copy link</button><button class="btn share" type="button" hidden>Share…</button><a class="btn pv" target="_blank" rel="noopener">Preview</a></div>`;
       li.querySelector('.name').textContent = n;
       if (mehndi.has(n)) li.querySelector('.name').insertAdjacentHTML('beforeend', '<span class="tag">Mehndi</span>');
@@ -116,17 +140,29 @@
       mt.addEventListener('change', () => { mt.checked ? mehndi.add(n) : mehndi.delete(n); saveMehndi(); const y = scrollY; render(); scrollTo(0, y); });
       li.querySelector('.url').textContent = url;
       li.querySelector('a.wa').href = 'https://wa.me/?text=' + encodeURIComponent(text);
+      li.querySelector('a.wa').addEventListener('click', () => record(n, url, 'WhatsApp'));
+      if (sent[n]) { const sn = li.querySelector('.sent-note'); sn.hidden = false; sn.textContent = `✓ Sent ${fmt(sent[n].time)}${sent[n].count > 1 ? ` · ${sent[n].count} times` : ''}${sent[n].mehndi ? ' · with Mehndi' : ''}`; }
       li.querySelector('a.pv').href = url;
       const sh = li.querySelector('button.share');
-      if (navigator.share) { sh.hidden = false; sh.addEventListener('click', () => navigator.share({ text }).catch(() => {})); }
+      if (navigator.share) { sh.hidden = false; sh.addEventListener('click', () => navigator.share({ text }).then(() => record(n, url, 'Share')).catch(() => {})); }
       const cb = li.querySelector('button.copy');
-      cb.addEventListener('click', () => copy(url, t => { cb.textContent = t; setTimeout(() => cb.textContent = 'Copy link', 1800); }));
+      cb.addEventListener('click', () => copy(url, t => { cb.textContent = t; if (t === 'Copied') record(n, url, 'Copied link'); setTimeout(() => cb.textContent = 'Copy link', 1800); }));
       list.appendChild(li);
     });
     const mc = people.filter(n => mehndi.has(n)).length;
-    $('#status').textContent = links.length ? `${links.length} link${links.length > 1 ? 's' : ''} ready · ${mc} invited to Mehndi.` : 'Add at least one name first.';
+    const sc = people.filter(n => sent[n]).length;
+    $('#status').textContent = links.length ? `${links.length} link${links.length > 1 ? 's' : ''} ready · ${mc} invited to Mehndi · ${sc} sent.` : 'Add at least one name first.';
   }
   $('#make').addEventListener('click', render);
+  const ss = $('#sheet-state');
+  ss.textContent = SHEET_URL ? '● Google Sheet connected: every invitation you send is added to it.' : 'Google Sheet not connected yet: sent invitations are remembered on this device only.';
+  ss.classList.toggle('on', !!SHEET_URL);
+  $('#copy-sent').addEventListener('click', () => {
+    const rows = Object.entries(sent).sort((a, b) => a[1].time - b[1].time)
+      .map(([n, r]) => [n, r.mehndi ? WITH_MEHNDI : ALL_EVENTS, r.mehndi ? 'Yes' : 'No', new Date(r.time).toLocaleString('en-IN'), r.count, r.method].join('\t'));
+    if (!rows.length) { $('#status').textContent = 'Nothing sent yet.'; return; }
+    copy(['Guest\tEvents\tMehndi\tSent at\tTimes sent\tSent by', ...rows].join('\n'), t => $('#status').textContent = t === 'Copied' ? `Sent list copied (${rows.length} guests). Paste it into any Google Sheet.` : t);
+  });
   $('#copy-all').addEventListener('click', () => {
     if (!links.length) render();
     copy(links.map(l => `${l.n}${mehndi.has(l.n) ? ' (Mehndi)' : ''}: ${l.url}`).join('\n'), t => $('#status').textContent = t === 'Copied' ? 'All links copied.' : t);
