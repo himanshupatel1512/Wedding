@@ -79,7 +79,7 @@
   names.value = load('guest-names') || '';
   msg.value = load('guest-msg') || DEFAULT_MSG;
   // Google Sheet logging: paste your Apps Script web app URL here (ends in /exec). Empty = keep the log on this device only
-  const SHEET_URL = '';
+  const SHEET_URL = 'https://script.google.com/macros/s/AKfycbywq7BqhDKtJi8YiS6GRDUWM-xnH9WnToSazytShuCvnp9uUEUtZDoOjdfHLLOXn1UzBA/exec';
   const ALL_EVENTS = 'Garba, Haldi, Varghodo, Wedding, Navchandi Yagna';
   const WITH_MEHNDI = 'Garba, Mehndi, Haldi, Varghodo, Wedding, Navchandi Yagna';
   let sent = {}; try { sent = JSON.parse(load('sent-log') || '{}'); } catch (_) {}
