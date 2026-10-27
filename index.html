@@ -642,7 +642,7 @@
       <div class="text-center">
         <p class="eyebrow">Utsav</p>
         <h2 id="events-h" class="font-display text-2xl sm:text-3xl text-navy mt-2">Wedding festivities</h2>
-        <p class="text-ink mt-2">A week of garba, mehndi, haldi and sacred rituals in Anand, Gujarat.</p>
+        <p class="text-ink mt-2">A week of celebrations and sacred rituals in Anand, Gujarat.</p>
       </div>
       <div id="event-list" class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 mt-8"></div>
     </div>
@@ -706,11 +706,12 @@ const CONFIG = {
   family: 'The Patel Family', hashtag: '#HimanshuWedsGriva',
   songUrl: '',   // optional: a song file URL (e.g. 'song.mp3'). Empty = the song embedded at the end of this file
   weddingAt: '2027-01-24T18:30:00+05:30',   // countdown target: wedding, 6:30 PM IST
+  // invite: 'm' = shown only to guests whose link has &m=1 (Mehndi is for selected guests)
   // map = venue name Google Maps searches for. link = optional Google Maps share link (maps.app.goo.gl/...) that overrides it
   events: [
     { name: 'Garba', time: 'Dinner from 6:00 PM · Garba at 7:00 PM', prop: 'garba', deva: 'ગરબા', date: 'Wednesday, 20 January 2027', place: 'Prayosha Park, Gana, Gujarat 388345',
       map: 'Prayosha Park, Gana, Gujarat 388345', link: '', note: 'An evening of dandiya, dhol and dancing in circles.' },
-    { name: 'Mehndi', time: '4:00 PM onwards · Dinner will follow', prop: 'mehndi', deva: 'મહેંદી', date: 'Thursday, 21 January 2027', place: 'Retro Bistro, Anand–Vidyanagar Road, Anand, Gujarat',
+    { name: 'Mehndi', invite: 'm', time: '4:00 PM onwards · Dinner will follow', prop: 'mehndi', deva: 'મહેંદી', date: 'Thursday, 21 January 2027', place: 'Retro Bistro, Anand–Vidyanagar Road, Anand, Gujarat',
       map: 'Retro Bistro, Anand Vidyanagar Road, Anand, Gujarat', link: '', note: 'Henna, music and blessings for the couple.' },
     { name: 'Haldi', time: '9:00 AM onwards · Lunch will follow', prop: 'haldi', deva: 'પીઠી', date: 'Friday, 22 January 2027', place: 'Prayosha Park, Gana, Gujarat 388345',
       map: 'Prayosha Park, Gana, Gujarat 388345', link: '', note: 'Turmeric, marigolds and laughter with the family.' },
@@ -750,7 +751,10 @@ document.querySelectorAll('[data-c]').forEach(el => { const v = CONFIG[el.datase
 
 /* Events */
 const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-$('#event-list').innerHTML = CONFIG.events.map(e => `
+/* Events marked invite:'x' show only when the guest's link carries &x=1 */
+const invitedTo = k => { try { return new URLSearchParams(location.search).get(k) === '1'; } catch (_) { return false; } };
+const shownEvents = CONFIG.events.filter(e => !e.invite || invitedTo(e.invite));
+$('#event-list').innerHTML = shownEvents.map(e => `
   <article class="event relative p-6 sm:p-7 min-w-0 flex flex-col">
     ${e.prop ? `<svg class="ev-prop" aria-hidden="true"><use href="#prop-${e.prop}"/></svg>` : ''}
     <div class="flex items-baseline justify-between gap-3 flex-wrap">

@@ -38,6 +38,10 @@
   .url { font-size: .85rem; color: var(--ink); word-break: break-all; user-select: all; }
   .row { display: flex; flex-wrap: wrap; gap: 8px; }
   .hint { color: var(--ink); font-size: 1rem; }
+  .mehndi-toggle { display: flex; align-items: center; gap: 10px; font-size: 1rem; cursor: pointer; padding: 6px 0; }
+  .mehndi-toggle input { width: 22px; height: 22px; accent-color: var(--maroon); margin: 0; }
+  li.has-mehndi { border-color: var(--maroon); box-shadow: inset 4px 0 0 var(--maroon); }
+  .tag { font-family: var(--f-display); font-size: .6rem; letter-spacing: .16em; text-transform: uppercase; color: #fff; background: var(--maroon); padding: 3px 8px; margin-left: 8px; vertical-align: middle; }
   .empty { color: var(--ink); font-style: italic; text-align: center; padding: 20px; border: 1px dashed rgba(180,138,60,.6); }
 </style>
 </head>
@@ -46,7 +50,7 @@
   <header>
     <p class="eyebrow">Himanshu &amp; Griva · for the family only</p>
     <h1>Guest invitation links</h1>
-    <p class="hint" style="margin-top:6px">Type one guest per line. Each guest gets a link that opens the invitation with their name on it.</p>
+    <p class="hint" style="margin-top:6px">Type one guest per line. Each guest gets a link that opens the invitation with their name on it. The Mehndi is shown only to guests you tick for it.</p>
   </header>
 
   <section class="card">
@@ -70,7 +74,15 @@
   const load = k => { try { return localStorage.getItem(k); } catch (_) { return null; } };
   names.value = load('guest-names') || '';
   msg.value = load('guest-msg') || DEFAULT_MSG;
-  const linkFor = n => BASE + '?to=' + encodeURIComponent(n).replace(/%20/g, '+');
+  const MEHNDI_LINE = 'You are also warmly invited to the Mehndi on Thursday, 21 January 2027.';
+  let mehndi = new Set(); try { mehndi = new Set(JSON.parse(load('mehndi-guests') || '[]')); } catch (_) {}
+  const saveMehndi = () => save('mehndi-guests', JSON.stringify([...mehndi]));
+  const linkFor = n => BASE + '?to=' + encodeURIComponent(n).replace(/%20/g, '+') + (mehndi.has(n) ? '&m=1' : '');
+  function messageFor(n, url) {
+    let t = msg.value.split('{name}').join(n);
+    if (mehndi.has(n)) t = t.includes('{link}') ? t.replace(/(\n*)([^\n]*\{link\})/, '\n\n' + MEHNDI_LINE + '\n\n$2') : t + '\n\n' + MEHNDI_LINE;
+    return t.split('{link}').join(url);
+  }
   let links = [];
 
   function legacyCopy(text) {
@@ -92,10 +104,16 @@
     $('#empty').hidden = links.length > 0;
     links.forEach(({ n, url }) => {
       const li = document.createElement('li');
-      const text = msg.value.split('{name}').join(n).split('{link}').join(url);
+      const text = messageFor(n, url);
+      if (mehndi.has(n)) li.classList.add('has-mehndi');
       li.innerHTML = `<span class="name"></span><span class="url"></span>
+        <label class="mehndi-toggle"><input type="checkbox"> Also invite to Mehndi</label>
         <div class="row"><a class="btn wa" target="_blank" rel="noopener">Send on WhatsApp</a><button class="btn copy" type="button">Copy link</button><button class="btn share" type="button" hidden>Share…</button><a class="btn pv" target="_blank" rel="noopener">Preview</a></div>`;
       li.querySelector('.name').textContent = n;
+      if (mehndi.has(n)) li.querySelector('.name').insertAdjacentHTML('beforeend', '<span class="tag">Mehndi</span>');
+      const mt = li.querySelector('.mehndi-toggle input');
+      mt.checked = mehndi.has(n);
+      mt.addEventListener('change', () => { mt.checked ? mehndi.add(n) : mehndi.delete(n); saveMehndi(); const y = scrollY; render(); scrollTo(0, y); });
       li.querySelector('.url').textContent = url;
       li.querySelector('a.wa').href = 'https://wa.me/?text=' + encodeURIComponent(text);
       li.querySelector('a.pv').href = url;
@@ -105,12 +123,13 @@
       cb.addEventListener('click', () => copy(url, t => { cb.textContent = t; setTimeout(() => cb.textContent = 'Copy link', 1800); }));
       list.appendChild(li);
     });
-    $('#status').textContent = links.length ? `${links.length} link${links.length > 1 ? 's' : ''} ready.` : 'Add at least one name first.';
+    const mc = people.filter(n => mehndi.has(n)).length;
+    $('#status').textContent = links.length ? `${links.length} link${links.length > 1 ? 's' : ''} ready · ${mc} invited to Mehndi.` : 'Add at least one name first.';
   }
   $('#make').addEventListener('click', render);
   $('#copy-all').addEventListener('click', () => {
     if (!links.length) render();
-    copy(links.map(l => `${l.n}: ${l.url}`).join('\n'), t => $('#status').textContent = t === 'Copied' ? 'All links copied.' : t);
+    copy(links.map(l => `${l.n}${mehndi.has(l.n) ? ' (Mehndi)' : ''}: ${l.url}`).join('\n'), t => $('#status').textContent = t === 'Copied' ? 'All links copied.' : t);
   });
   if (names.value.trim()) render();
 </script>
