@@ -61,7 +61,7 @@
     <textarea id="names" placeholder="Ramesh Patel &amp; Family&#10;Priya Shah&#10;Mehta Family"></textarea>
     <label for="message">WhatsApp message <span style="text-transform:none;letter-spacing:0;font-family:var(--f-body)">({name} and {link} are filled in)</span></label>
     <textarea id="message" style="min-height:110px"></textarea>
-    <div class="row"><button class="btn primary" id="make" type="button">Make links</button><button class="btn" id="copy-all" type="button">Copy all links</button><button class="btn" id="copy-sent" type="button">Copy sent list</button></div>
+    <div class="row"><button class="btn primary" id="make" type="button">Make links</button><button class="btn" id="copy-all" type="button">Copy all links</button><button class="btn" id="copy-sent" type="button">Copy sent list</button><button class="btn" id="reset-msg" type="button">Reset message</button></div>
     <p class="sheet-state" id="sheet-state"></p>
     <p class="hint" id="status" role="status"></p>
   </section>
@@ -78,6 +78,7 @@
   const load = k => { try { return localStorage.getItem(k); } catch (_) { return null; } };
   names.value = load('guest-names') || '';
   msg.value = load('guest-msg') || DEFAULT_MSG;
+  if (msg.value.includes('the Patel Family invites you')) msg.value = msg.value.replace('the Patel Family invites you', 'Mahesh Dahayabhai Patel & Mitesh Dahayabhai Patel invite you');
   // Google Sheet logging: paste your Apps Script web app URL here (ends in /exec). Empty = keep the log on this device only
   const SHEET_URL = 'https://script.google.com/macros/s/AKfycbywq7BqhDKtJi8YiS6GRDUWM-xnH9WnToSazytShuCvnp9uUEUtZDoOjdfHLLOXn1UzBA/exec';
   const ALL_EVENTS = 'Garba, Haldi, Varghodo, Wedding, Navchandi Yagna';
@@ -154,6 +155,7 @@
     $('#status').textContent = links.length ? `${links.length} link${links.length > 1 ? 's' : ''} ready · ${mc} invited to Mehndi · ${sc} sent.` : 'Add at least one name first.';
   }
   $('#make').addEventListener('click', render);
+  $('#reset-msg').addEventListener('click', () => { msg.value = DEFAULT_MSG; save('guest-msg', msg.value); render(); $('#status').textContent = 'Message reset to the latest wording.'; });
   const ss = $('#sheet-state');
   ss.textContent = SHEET_URL ? '● Google Sheet connected: every invitation you send is added to it.' : 'Google Sheet not connected yet: sent invitations are remembered on this device only.';
   ss.classList.toggle('on', !!SHEET_URL);
