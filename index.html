@@ -301,7 +301,12 @@
 
   /* Event props: a colourful drawing of each ritual behind its card */
   .event { overflow: hidden; }
-  .event > :not(.ev-prop) { position: relative; z-index: 1; }
+  .event > :not(.ev-prop):not(.ev-mark) { position: relative; z-index: 1; }
+  .ev-mark { position: absolute; z-index: 0; left: 50%; top: 50%; width: min(78%, 300px); height: auto; aspect-ratio: 1; transform: translate(-50%, -50%) rotate(-8deg);
+    pointer-events: none; opacity: .1; fill: none; stroke: #A8772E; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+    filter: grayscale(1) sepia(1) saturate(1.8) hue-rotate(-8deg) brightness(.95); transition: opacity .8s ease, transform 1.2s cubic-bezier(.2,.8,.2,1); }
+  .event.ev-live .ev-mark { opacity: .14; transform: translate(-50%, -50%) rotate(-4deg) scale(1.04); }
+  @media (hover: hover) { .event:hover .ev-mark { opacity: .14; transform: translate(-50%, -50%) rotate(-4deg) scale(1.04); } }
   .ev-prop { position: absolute; right: -8px; bottom: -8px; width: 160px; height: 160px; z-index: 0; pointer-events: none; opacity: .58;
     fill: none; stroke: #A8772E; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transform-origin: 70% 80%;
     transition: transform .7s cubic-bezier(.2,.8,.2,1), opacity .7s ease, filter .7s ease; }
@@ -756,7 +761,7 @@ const invitedTo = k => { try { return new URLSearchParams(location.search).get(k
 const shownEvents = CONFIG.events.filter(e => !e.invite || invitedTo(e.invite));
 $('#event-list').innerHTML = shownEvents.map(e => `
   <article class="event relative p-6 sm:p-7 min-w-0 flex flex-col">
-    ${e.prop ? `<svg class="ev-prop" aria-hidden="true"><use href="#prop-${e.prop}"/></svg>` : ''}
+    ${e.prop ? `<svg class="ev-mark" aria-hidden="true"><use href="#prop-${e.prop}"/></svg><svg class="ev-prop" aria-hidden="true"><use href="#prop-${e.prop}"/></svg>` : ''}
     <div class="flex items-baseline justify-between gap-3 flex-wrap">
       <h3 class="font-display text-xl text-maroon">${esc(e.name)}</h3>
       <span class="font-guj text-gold text-lg">${esc(e.deva)}</span>
